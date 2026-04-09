@@ -1,0 +1,3 @@
+Arrhenius 拟合结果
+Ea from D      = 1.665000 eV
+Ea from sigmaT = 1.665000 eV

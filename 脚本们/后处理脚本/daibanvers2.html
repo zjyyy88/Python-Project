@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zjyの智能任务分类管理系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-blue: #2196f3;
+            --primary-green: #4caf50;
+            --accent-orange: #ff9800;
+            --accent-red: #f44336;
+            --background-light: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.12);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e6f7ff 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* 头部样式 */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--primary-blue), #64b5f6);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px var(--shadow-light);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+        
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 3rem;
+            filter: drop-shadow(0 3px 5px rgba(0,0,0,0.2));
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* 控制面板样式 */
+        .control-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stats-card, .filter-card, .add-task-card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 8px 25px var(--shadow-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stats-card:hover, .filter-card:hover, .add-task-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--shadow-medium);
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            font-size: 1.5rem;
+        }
+        
+        /* 统计信息样式 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: var(--background-light);
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .total-tasks .stat-value { color: var(--primary-blue); }
+        .completion-rate .stat-value { color: var(--primary-green); }
+        .pending-tasks .stat-value { color: var(--accent-orange); }
+        .completed-tasks .stat-value { color: var(--accent-red); }
+        
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        
+        /* 筛选器样式 */
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .date-picker, .category-filter {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .date-picker input, .category-filter select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .date-picker input:focus, .category-filter select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+        
+        /* 添加任务样式 */
+        .add-task-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .task-input-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .task-input, .category-select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .task-input:focus, .category-select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+        
+        .add-btn {
+            background: linear-gradient(135deg, var(--primary-blue), #1976d2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+        }
+        
+        /* 任务分类区域样式 */
+        .categories-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .category-column {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 8px 25px var(--shadow-light);
+            transition: transform 0.3s ease;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .category-count {
+            background: #e2e8f0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .academic .category-title { color: var(--primary-blue); }
+        .academic .category-header { border-color: var(--primary-blue); }
+        
+        .programming .category-title { color: var(--primary-green); }
+        .programming .category-header { border-color: var(--primary-green); }
+        
+        .reading .category-title { color: var(--accent-orange); }
+        .reading .category-header { border-color: var(--accent-orange); }
+        
+        .daily .category-title { color: var(--accent-red); }
+        .daily .category-header { border-color: var(--accent-red); }
+        
+        /* 任务卡片样式 */
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .task-card {
+            background: var(--background-light);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 5px solid;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .task-card.academic { border-left-color: var(--primary-blue); }
+        .task-card.programming { border-left-color: var(--primary-green); }
+        .task-card.reading { border-left-color: var(--accent-orange); }
+        .task-card.daily { border-left-color: var(--accent-red); }
+        
+        .task-card.completed {
+            opacity: 0.8;
+            background: #f1f5f9;
+        }
+        
+        .task-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .task-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            flex: 1;
+        }
+        
+        .task-card.completed .task-title {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .status-btn, .delete-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .status-btn {
+            background: #e8f5e9;
+            color: var(--primary-green);
+        }
+        
+        .status-btn:hover {
+            background: #c8e6c9;
+        }
+        
+        .status-btn.completed {
+            background: #ffebee;
+            color: var(--accent-red);
+        }
+        
+        .status-btn.completed:hover {
+            background: #ffcdd2;
+        }
+        
+        .delete-btn {
+            background: #f5f5f5;
+            color: #757575;
+        }
+        
+        .delete-btn:hover {
+            background: #e0e0e0;
+        }
+        
+        /* 想法文本框样式 */
+        .idea-section {
+            margin-top: 15px;
+        }
+        
+        .idea-label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .idea-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 80px;
+            transition: all 0.3s;
+        }
+        
+        .idea-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+        
+        /* 图片上传预览样式 */
+        .image-upload {
+            margin-top: 15px;
+        }
+        
+        .upload-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: #e3f2fd;
+            color: var(--primary-blue);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .upload-label:hover {
+            background: #bbdefb;
+        }
+        
+        .image-preview {
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .preview-img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        /* 图表区域样式 */
+        .chart-section {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 25px;
+            box-shadow: 0 8px 25px var(--shadow-light);
+            margin-bottom: 40px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .categories-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .categories-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .task-input-row {
+                flex-direction: column;
+            }
+            
+            .task-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .task-actions {
+                align-self: flex-end;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+            }
+        }
+        
+        /* 空状态提示 */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        /* 工具提示样式 */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .task-card, .category-column, .stats-card, .filter-card, .add-task-card, .chart-section {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部区域 -->
+        <header>
+            <h1 class="logo">
+                <i class="fas fa-tasks"></i>
+                zjyの智能任务分类管理系统
+            </h1>
+            <p class="subtitle">
+                高效管理zjyの学术研究、编程开发、文献阅读和日常事务，实时追踪任务进度，提升工作效率
+            </p>
+        </header>
+        
+        <!-- 控制面板 -->
+        <div class="control-panel">
+            <!-- 统计信息卡片 -->
+            <div class="stats-card">
+                <h2 class="card-title"><i class="fas fa-chart-bar"></i> 数据统计</h2>
+                <div class="stats-grid">
+                    <div class="stat-item total-tasks">
+                        <div class="stat-value" id="totalTasks">0</div>
+                        <div class="stat-label">总任务数</div>
+                    </div>
+                    <div class="stat-item completion-rate">
+                        <div class="stat-value" id="completionRate">0%</div>
+                        <div class="stat-label">完成率</div>
+                    </div>
+                    <div class="stat-item pending-tasks">
+                        <div class="stat-value" id="pendingTasks">0</div>
+                        <div class="stat-label">待办任务</div>
+                    </div>
+                    <div class="stat-item completed-tasks">
+                        <div class="stat-value" id="completedTasks">0</div>
+                        <div class="stat-label">已完成</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 日期筛选卡片 -->
+            <div class="filter-card">
+                <h2 class="card-title"><i class="fas fa-filter"></i> 数据筛选</h2>
+                <div class="filter-controls">
+                    <div class="date-picker">
+                        <label for="dateFilter" class="tooltip">
+                            选择日期
+                            <span class="tooltip-text">查看任意历史日期的任务数据</span>
+                        </label>
+                        <input type="date" id="dateFilter" value="">
+                    </div>
+                    <div class="category-filter">
+                        <label for="categoryFilter">按分类筛选</label>
+                        <select id="categoryFilter">
+                            <option value="all">所有分类</option>
+                            <option value="academic">学术研究</option>
+                            <option value="programming">编程开发</option>
+                            <option value="reading">文献阅读</option>
+                            <option value="daily">日常事务</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 添加任务卡片 -->
+            <div class="add-task-card">
+                <h2 class="card-title"><i class="fas fa-plus-circle"></i> 添加新任务</h2>
+                <div class="add-task-form">
+                    <div class="task-input-row">
+                        <input type="text" id="taskInput" class="task-input" placeholder="输入任务名称..." maxlength="100">
+                        <select id="categorySelect" class="category-select">
+                            <option value="academic">学术研究</option>
+                            <option value="programming">编程开发</option>
+                            <option value="reading">文献阅读</option>
+                            <option value="daily">日常事务</option>
+                        </select>
+                    </div>
+                    <button id="addTaskBtn" class="add-btn">
+                        <i class="fas fa-plus"></i> 添加任务
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 任务分类区域 -->
+        <div class="categories-section">
+            <!-- 学术研究分类 -->
+            <div class="category-column academic">
+                <div class="category-header">
+                    <h3 class="category-title">
+                        <i class="fas fa-graduation-cap"></i> 学术研究
+                    </h3>
+                    <span class="category-count" id="academicCount">0</span>
+                </div>
+                <div class="task-list" id="academicTasks">
+                    <div class="empty-state">
+                        <i class="fas fa-book-open"></i>
+                        <p>暂无学术研究任务</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 编程开发分类 -->
+            <div class="category-column programming">
+                <div class="category-header">
+                    <h3 class="category-title">
+                        <i class="fas fa-code"></i> 编程开发
+                    </h3>
+                    <span class="category-count" id="programmingCount">0</span>
+                </div>
+                <div class="task-list" id="programmingTasks">
+                    <div class="empty-state">
+                        <i class="fas fa-laptop-code"></i>
+                        <p>暂无编程开发任务</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 文献阅读分类 -->
+            <div class="category-column reading">
+                <div class="category-header">
+                    <h3 class="category-title">
+                        <i class="fas fa-book-reader"></i> 文献阅读
+                    </h3>
+                    <span class="category-count" id="readingCount">0</span>
+                </div>
+                <div class="task-list" id="readingTasks">
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <p>暂无文献阅读任务</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 日常事务分类 -->
+            <div class="category-column daily">
+                <div class="category-header">
+                    <h3 class="category-title">
+                        <i class="fas fa-calendar-day"></i> 日常事务
+                    </h3>
+                    <span class="category-count" id="dailyCount">0</span>
+                </div>
+                <div class="task-list" id="dailyTasks">
+                    <div class="empty-state">
+                        <i class="fas fa-tasks"></i>
+                        <p>暂无日常事务任务</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 图表区域 -->
+        <div class="chart-section">
+            <h2 class="card-title">
+                <i class="fas fa-chart-pie"></i> 任务分布统计
+                <span class="tooltip">
+                    <i class="fas fa-info-circle" style="font-size: 1rem; color: var(--text-secondary);"></i>
+                    <span class="tooltip-text">悬停在柱状图上查看具体数值</span>
+                </span>
+            </h2>
+            <div class="chart-container">
+                <canvas id="taskChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 任务管理系统
+        class TaskManager {
+            constructor() {
+                this.tasks = this.loadTasks();
+                this.currentDate = new Date().toISOString().split('T')[0];
+                this.init();
+            }
+            
+            // 从本地存储加载任务
+            loadTasks() {
+                const tasksJson = localStorage.getItem('taskManagerTasks');
+                if (tasksJson) {
+                    return JSON.parse(tasksJson);
+                }
+                return [];
+            }
+            
+            // 保存任务到本地存储
+            saveTasks() {
+                localStorage.setItem('taskManagerTasks', JSON.stringify(this.tasks));
+                this.updateStats();
+                this.renderTasks();
+                this.updateChart();
+            }
+            
+            // 初始化
+            init() {
+                this.setupEventListeners();
+                this.setDefaultDate();
+                this.updateStats();
+                this.renderTasks();
+                this.initChart();
+            }
+            
+            // 设置默认日期
+            setDefaultDate() {
+                document.getElementById('dateFilter').value = this.currentDate;
+            }
+            
+            // 设置事件监听器
+            setupEventListeners() {
+                // 添加任务按钮
+                document.getElementById('addTaskBtn').addEventListener('click', () => this.addTask());
+                
+                // 回车键添加任务
+                document.getElementById('taskInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.addTask();
+                });
+                
+                // 日期筛选
+                document.getElementById('dateFilter').addEventListener('change', (e) => {
+                    this.currentDate = e.target.value;
+                    this.renderTasks();
+                    this.updateStats();
+                    this.updateChart();
+                });
+                
+                // 分类筛选
+                document.getElementById('categoryFilter').addEventListener('change', () => {
+                    this.renderTasks();
+                });
+            }
+            
+            // 添加新任务
+            addTask() {
+                const taskInput = document.getElementById('taskInput');
+                const categorySelect = document.getElementById('categorySelect');
+                
+                const title = taskInput.value.trim();
+                const category = categorySelect.value;
+                
+                if (!title) {
+                    alert('请输入任务名称');
+                    taskInput.focus();
+                    return;
+                }
+                
+                const newTask = {
+                    id: Date.now(),
+                    title: title,
+                    category: category,
+                    completed: false,
+                    date: this.currentDate,
+                    idea: '',
+                    image: null
+                };
+                
+                this.tasks.push(newTask);
+                this.saveTasks();
+                
+                // 清空输入框
+                taskInput.value = '';
+                taskInput.focus();
+                
+                // 显示添加成功提示
+                this.showNotification('任务添加成功！', 'success');
+            }
+            
+            // 显示通知
+            showNotification(message, type) {
+                // 移除已有的通知
+                const existingNotification = document.querySelector('.notification');
+                if (existingNotification) {
+                    existingNotification.remove();
+                }
+                
+                // 创建新通知
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    ${message}
+                `;
+                
+                // 添加样式
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${type === 'success' ? '#4caf50' : '#f44336'};
+                    color: white;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    z-index: 1000;
+                    animation: fadeIn 0.3s ease-out;
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // 3秒后自动移除
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateX(100px)';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+            
+            // 切换任务状态
+            toggleTaskStatus(taskId) {
+                const task = this.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.completed = !task.completed;
+                    this.saveTasks();
+                    
+                    // 显示状态变更提示
+                    const message = task.completed ? '任务标记为已完成！' : '任务重新标记为待办！';
+                    this.showNotification(message, 'success');
+                }
+            }
+            
+            // 更新任务想法
+            updateTaskIdea(taskId, idea) {
+                const task = this.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.idea = idea;
+                    this.saveTasks();
+                }
+            }
+            
+            // 处理图片上传
+            handleImageUpload(taskId, file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('请选择图片文件');
+                    return;
+                }
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('图片大小不能超过5MB');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const task = this.tasks.find(t => t.id === taskId);
+                    if (task) {
+                        task.image = e.target.result;
+                        this.saveTasks();
+                        this.showNotification('图片上传成功！', 'success');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+            
+            // 删除任务
+            deleteTask(taskId) {
+                if (confirm('确定要删除这个任务吗？')) {
+                    this.tasks = this.tasks.filter(t => t.id !== taskId);
+                    this.saveTasks();
+                    this.showNotification('任务已删除！', 'success');
+                }
+            }
+            
+            // 更新统计信息
+            updateStats() {
+                const filteredTasks = this.getFilteredTasks();
+                const totalTasks = filteredTasks.length;
+                const completedTasks = filteredTasks.filter(t => t.completed).length;
+                const pendingTasks = totalTasks - completedTasks;
+                const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+                
+                // 更新统计显示
+                document.getElementById('totalTasks').textContent = totalTasks;
+                document.getElementById('completedTasks').textContent = completedTasks;
+                document.getElementById('pendingTasks').textContent = pendingTasks;
+                document.getElementById('completionRate').textContent = `${completionRate}%`;
+                
+                // 更新各分类计数
+                this.updateCategoryCounts();
+            }
+            
+            // 更新分类计数
+            updateCategoryCounts() {
+                const filteredTasks = this.getFilteredTasks();
+                const counts = {
+                    academic: 0,
+                    programming: 0,
+                    reading: 0,
+                    daily: 0
+                };
+                
+                filteredTasks.forEach(task => {
+                    counts[task.category]++;
+                });
+                
+                document.getElementById('academicCount').textContent = counts.academic;
+                document.getElementById('programmingCount').textContent = counts.programming;
+                document.getElementById('readingCount').textContent = counts.reading;
+                document.getElementById('dailyCount').textContent = counts.daily;
+            }
+            
+            // 获取筛选后的任务
+            getFilteredTasks() {
+                const dateFilter = this.currentDate;
+                const categoryFilter = document.getElementById('categoryFilter').value;
+                
+                return this.tasks.filter(task => {
+                    // 日期筛选
+                    if (task.date !== dateFilter) return false;
+                    
+                    // 分类筛选
+                    if (categoryFilter !== 'all' && task.category !== categoryFilter) return false;
+                    
+                    return true;
+                });
+            }
+            
+            // 渲染任务列表
+            renderTasks() {
+                const filteredTasks = this.getFilteredTasks();
+                
+                // 清空所有任务列表
+                document.querySelectorAll('.task-list').forEach(list => {
+                    list.innerHTML = '<div class="empty-state"><i class="fas fa-tasks"></i><p>暂无任务</p></div>';
+                });
+                
+                // 按分类分组
+                const tasksByCategory = {
+                    academic: [],
+                    programming: [],
+                    reading: [],
+                    daily: []
+                };
+                
+                filteredTasks.forEach(task => {
+                    tasksByCategory[task.category].push(task);
+                });
+                
+                // 渲染每个分类的任务
+                Object.keys(tasksByCategory).forEach(category => {
+                    const tasks = tasksByCategory[category];
+                    const container = document.getElementById(`${category}Tasks`);
+                    
+                    if (tasks.length === 0) {
+                        container.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-${this.getCategoryIcon(category)}"></i>
+                                <p>暂无${this.getCategoryName(category)}任务</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    container.innerHTML = '';
+                    tasks.forEach(task => {
+                        const taskElement = this.createTaskElement(task);
+                        container.appendChild(taskElement);
+                    });
+                });
+            }
+            
+            // 创建任务元素
+            createTaskElement(task) {
+                const div = document.createElement('div');
+                div.className = `task-card ${task.category} ${task.completed ? 'completed' : ''}`;
+                div.dataset.taskId = task.id;
+                
+                div.innerHTML = `
+                    <div class="task-header">
+                        <div class="task-title">${this.escapeHtml(task.title)}</div>
+                        <div class="task-actions">
+                            <button class="status-btn ${task.completed ? 'completed' : ''}" 
+                                    onclick="taskManager.toggleTaskStatus(${task.id})">
+                                <i class="fas fa-${task.completed ? 'redo' : 'check'}"></i>
+                                ${task.completed ? '重新开始' : '完成'}
+                            </button>
+                            <button class="delete-btn" onclick="taskManager.deleteTask(${task.id})">
+                                <i class="fas fa-trash"></i>
+                                删除
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="idea-section">
+                        <label class="idea-label">任务想法/备注：</label>
+                        <textarea class="idea-input" 
+                                  placeholder="在此记录任务相关的想法、进展或备注..."
+                                  oninput="taskManager.updateTaskIdea(${task.id}, this.value)">${this.escapeHtml(task.idea)}</textarea>
+                    </div>
+                    
+                    <div class="image-upload">
+                        <label class="upload-label">
+                            <i class="fas fa-camera"></i>
+                            上传图片
+                            <input type="file" accept="image/*" style="display: none;" 
+                                   onchange="taskManager.handleTaskImageUpload(${task.id}, this)">
+                        </label>
+                        ${task.image ? `
+                            <div class="image-preview" style="display: block;">
+                                <img src="${task.image}" alt="任务图片" class="preview-img">
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                return div;
+            }
+            
+            // 处理任务图片上传
+            handleTaskImageUpload(taskId, input) {
+                const file = input.files[0];
+                if (file) {
+                    this.handleImageUpload(taskId, file);
+                }
+            }
+            
+            // 获取分类图标
+            getCategoryIcon(category) {
+                const icons = {
+                    academic: 'graduation-cap',
+                    programming: 'code',
+                    reading: 'book-reader',
+                    daily: 'calendar-day'
+                };
+                return icons[category] || 'tasks';
+            }
+            
+            // 获取分类名称
+            getCategoryName(category) {
+                const names = {
+                    academic: '学术研究',
+                    programming: '编程开发',
+                    reading: '文献阅读',
+                    daily: '日常事务'
+                };
+                return names[category] || '未知';
+            }
+            
+            // 初始化图表
+            initChart() {
+                const ctx = document.getElementById('taskChart').getContext('2d');
+                this.chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['学术研究', '编程开发', '文献阅读', '日常事务'],
+                        datasets: [{
+                            label: '任务数量',
+                            data: [0, 0, 0, 0],
+                            backgroundColor: [
+                                'rgba(33, 150, 243, 0.8)',
+                                'rgba(76, 175, 80, 0.8)',
+                                'rgba(255, 152, 0, 0.8)',
+                                'rgba(244, 67, 54, 0.8)'
+                            ],
+                            borderColor: [
+                                'rgb(33, 150, 243)',
+                                'rgb(76, 175, 80)',
+                                'rgb(255, 152, 0)',
+                                'rgb(244, 67, 54)'
+                            ],
+                            borderWidth: 1,
+                            borderRadius: 5,
+                            hoverBackgroundColor: [
+                                'rgba(33, 150, 243, 1)',
+                                'rgba(76, 175, 80, 1)',
+                                'rgba(255, 152, 0, 1)',
+                                'rgba(244, 67, 54, 1)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                padding: 10,
+                                titleFont: {
+                                    size: 14
+                                },
+                                bodyFont: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    font: {
+                                        size: 12
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        size: 12
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // 更新图表
+            updateChart() {
+                if (!this.chart) return;
+                
+                const filteredTasks = this.getFilteredTasks();
+                const counts = {
+                    academic: 0,
+                    programming: 0,
+                    reading: 0,
+                    daily: 0
+                };
+                
+                filteredTasks.forEach(task => {
+                    counts[task.category]++;
+                });
+                
+                this.chart.data.datasets[0].data = [
+                    counts.academic,
+                    counts.programming,
+                    counts.reading,
+                    counts.daily
+                ];
+                
+                this.chart.update();
+            }
+            
+            // 防止XSS攻击
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        }
+        
+        // 初始化任务管理器
+        const taskManager = new TaskManager();
+        
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            
+            .notification {
+                animation: fadeIn 0.3s ease-out;
+            }
+        `;
+        document.head.appendChild(style);
+        // 添加文件上传预览功能
+        document.addEventListener('change', function(e) {
+            if (e.target.type === 'file' && e.target.accept === 'image/*') {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const previewDiv = e.target.closest('.image-upload').querySelector('.image-preview');
+                        const previewImg = previewDiv.querySelector('img') || document.createElement('img');
+                        previewImg.src = event.target.result;
+                        previewImg.className = 'preview-img';
+                        previewDiv.appendChild(previewImg);
+                        previewDiv.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+surface_element,atomic_radius,electronegativity,work_function,band_gap,d_band_center,adsorption_energy
+Li,1.52,0.98,2.9,2.5,-2.0,-0.45
+Na,1.86,0.93,2.3,2.3,-1.8,-0.38
+Al,1.43,1.61,4.2,0.0,-1.5,-0.65
+Si,1.17,1.90,4.8,1.1,-1.2,-0.52

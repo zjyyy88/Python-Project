@@ -1,0 +1,17 @@
+XGBoost descriptor analysis for adsorption energy
+========================================================
+Input file: C:\Users\ZHANGJY02\PycharmProjects\PythonProject\脚本们\后处理脚本\dband_adsorption_data.csv
+Samples: LOOCV on 9 features
+SHAP available: True
+
+LOOCV metrics
+  MAE  = 0.1221 eV
+  RMSE = 0.1638 eV
+  R2   = 0.6586
+
+Top descriptors
+  - d_band: SHAP=0.14187
+  - atomic_number: SHAP=0.09944
+  - vdw_radius: SHAP=0.01976
+  - covalent_radius: SHAP=0.01231
+  - is_transition_metal: SHAP=0.00678

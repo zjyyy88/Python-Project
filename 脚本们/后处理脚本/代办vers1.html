@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>每日待办看板</title>
+    <style>
+        :root {
+            --primary-color: #2E5AAC; /* 主色可自定义 */
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text-color: #333333;
+            --accent-color: #1CC88A;
+            --border-color: #E0E0E0;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .date-filter {
+            display: flex;
+            gap: 10px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .metrics {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            flex: 1 1 200px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .metric-card h3 {
+            margin: 10px 0 5px;
+            color: var(--primary-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #F1F3F4;
+        }
+
+        .task-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .task-form input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .task-form button {
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .task-form button:hover {
+            background-color: #234d99;
+        }
+
+        .chart-container {
+            height: 400px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0,0,0,0.75);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>每日待办看板</h1>
+            <div class="date-filter">
+                <label>选择日期:
+                    <input type="date" id="selectedDate">
+                </label>
+                <button onclick="filterByDate()">筛选</button>
+            </div>
+        </div>
+
+        <div class="task-form">
+            <input type="text" id="newTask" placeholder="输入新任务">
+            <select id="taskCategory">
+                <option value="writeThesis">写大论文</option>
+                <option value="writePaper">写小论文</option>
+                <option value="research">科研内容</option>
+                <option value="learning">学习新事物</option>
+            </select>
+            <button onclick="addTask()">添加</button>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <h3>待办总数</h3>
+                <p id="totalTasks">0</p>
+            </div>
+            <div class="metric-card">
+                <h3>已完成数</h3>
+                <p id="completedTasks">0</p>
+            </div>
+            <div class="metric-card">
+                <h3>完成率</h3>
+                <p id="completionRate">0%</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>任务分类统计</h2>
+            <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+                <div class="tooltip" id="tooltip"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>今日明细</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>时间</th>
+                        <th>任务</th>
+                        <th>分类</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody id="taskTable">
+                    <!-- 动态数据填充 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // 数据存储
+        let tasks = [];
+
+        // 初始化示例数据
+        const initialData = [
+            {
+                id: 1,
+                date: "2023-10-05",
+                task: "完成论文引言部分",
+                category: "writeThesis",
+                completed: false
+            },
+            {
+                id: 2,
+                date: "2023-10-05",
+                task: "阅读AI论文",
+                category: "research",
+                completed: true
+            }
+        ];
+
+        // 初始化数据
+        tasks = initialData;
+
+        // 初始化图表
+        let categoryChart;
+        const chartCtx = document.getElementById('categoryChart').getContext('2d');
+
+        // 分类映射
+        const categoryMap = {
+            writeThesis: { name: "写大论文", color: "#4E73DF" },
+            writePaper: { name: "写小论文", color: "#1CC88A" },
+            research: { name: "科研内容", color: "#F6C23E" },
+            learning: { name: "学习新事物", color: "#36A2EB" }
+        };
+
+        // 更新图表
+        function updateChart() {
+            const filtered = getFilteredTasks();
+            const stats = getCategoryStats(filtered);
+            
+            if (categoryChart) categoryChart.destroy();
+            
+            categoryChart = new Chart(chartCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.values(categoryMap).map(c => c.name),
+                    datasets: [{
+                        label: '任务数量',
+                        data: Object.values(categoryMap).map(c => stats[c.name] || 0),
+                        backgroundColor: Object.values(categoryMap).map(c => c.color),
+                        borderColor: Object.values(categoryMap).map(c => c.color),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed.y;
+                                    return `${value} 项`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 获取分类统计
+        function getCategoryStats(tasks) {
+            return tasks.reduce((acc, task) => {
+                const category = categoryMap[task.category].name;
+                acc[category] = (acc[category] || 0) + 1;
+                return acc;
+            }, {});
+        }
+
+        // 更新表格
+        function updateTable() {
+            const filtered = getFilteredTasks();
+            const tbody = document.getElementById('taskTable');
+            tbody.innerHTML = filtered.map(task => `
+                <tr>
+                    <td>${task.date}</td>
+                    <td ${task.completed ? 'style="text-decoration: line-through"' : ''}>${task.task}</td>
+                    <td>${categoryMap[task.category].name}</td>
+                    <td>${task.completed ? '已完成' : '待办'}</td>
+                </tr>
+            `).join('');
+        }
+
+        // 添加任务
+        function addTask() {
+            const taskInput = document.getElementById('newTask');
+            const categorySelect = document.getElementById('taskCategory');
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (taskInput.value.trim()) {
+                tasks.push({
+                    id: Date.now(),
+                    date: today,
+                    task: taskInput.value.trim(),
+                    category: categorySelect.value,
+                    completed: false
+                });
+                taskInput.value = '';
+                updateSummary();
+                updateTable();
+                updateChart();
+            }
+        }
+
+        // 标记完成
+        function toggleCompletion(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                updateSummary();
+                updateTable();
+                updateChart();
+            }
+        }
+
+        // 获取筛选后的任务
+        function getFilteredTasks() {
+            const selectedDate = document.getElementById('selectedDate').value;
+            const today = new Date().toISOString().split('T')[0];
+            const filterDate = selectedDate || today;
+            
+            return tasks.filter(task => task.date === filterDate);
+        }
+
+        // 更新摘要
+        function updateSummary() {
+            const filtered = getFilteredTasks();
+            const total = filtered.length;
+            const completed = filtered.filter(t => t.completed).length;
+            
+            document.getElementById('totalTasks').textContent = total;
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('completionRate').textContent = 
+                total === 0 ? '0%' : `${Math.round((completed/total)*100)}%`;
+        }
+
+        // 日期筛选
+        function filterByDate() {
+            updateSummary();
+            updateTable();
+            updateChart();
+        }
+
+        // 初始化
+        function init() {
+            updateSummary();
+            updateTable();
+            updateChart();
+        }
+
+        // 事件监听
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            document.getElementById('selectedDate').addEventListener('change', filterByDate);
+        });
+    </script>
+</body>
+</html>
+
