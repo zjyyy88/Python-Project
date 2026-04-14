@@ -135,19 +135,26 @@ outdir = Path(
 outdir.mkdir(parents=True, exist_ok=True)
 
 vector = (1, 0, 0)
-vector_a, vector_b = (0, 1, 0), (0, 0, 1)
-nlayers = 21
+vector_a, vector_b = (0, 2, 0), (0, 0, 2)
+nlayers = 27
 
 origo_values = np.arange(-0.5, 0.5, 0.01)
 target_formulas = {
     'BiCl18Li9Y2',
     'Bi2Cl36Li18Y4',
     'Bi3Cl54Li27Y6',
+    'Bi4Cl72Li36Y8',
 }
 target_reduced_keys = {reduced_formula_key(formula) for formula in target_formulas}
 
 surface_tol = 1.2
+#含义：定义“表面层厚度阈值”，单位是 Å。
+#作用：在统计上下表面终止面时，满足z坐标在 slab 的 z_min + surface_tol 以内的原子被认为是底部表面原子，满足 z 坐标在 slab 的 z_max - surface_tol 以外的原子被认为是顶部表面原子。
 distance_decimals = 3
+#含义：原子对距离保留的小数位数。
+#作用：构建结构签名时会把距离四舍五入到 3 位小数，用于去重比较。
+#小数位更多：判定更严格，更容易分成不同结构
+#小数位更少：判定更宽松，更容易被合并为同一结构
 # ======================================================
 
 

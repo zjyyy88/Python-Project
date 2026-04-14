@@ -86,11 +86,11 @@ outdir.mkdir(parents=True, exist_ok=True) # 如果目录不存在则创建
 
 # ===== 第一个切割任务 =====
 # 定义本次切割的目标晶面方向 (仅作为文件名标记使用，实际切割由 vector_a/b 控制)
-vector = (1, 0, 0)
+vector = (1, 1, 0)
 # 定义切割平面的两个基矢量 a 和 b
 # 这里的坐标是相对于原来体相晶胞基矢量的系数
-vector_a, vector_b =  (0, 1, 0), (0, 0, 1) # 自定义的一组矢量
-nlayers = 14 # 定义切片的层数 (注意：cut 函数的 nlayers 定义可能与 surface 不同，指沿第三矢量堆叠的单胞数)
+vector_a, vector_b =  (1, -1, 0), (0, 0, 1) # 自定义的一组矢量
+nlayers = 9 # 定义切片的层数 (注意：cut 函数的 nlayers 定义可能与 surface 不同，指沿第三矢量堆叠的单胞数)
 selected_formula = None
 
 # 循环遍历 origo (原点位移) 参数
