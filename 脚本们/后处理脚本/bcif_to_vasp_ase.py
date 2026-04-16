@@ -16,7 +16,7 @@ except Exception as exc:  # noqa: BLE001
     sys.exit(1)
 
 
-DEFAULT_ROOT = r"E:\固态组\LiLa2O3\La2O3-Lithiation\C-3-convex\16eto8c"
+DEFAULT_ROOT = r"E:\固态组\LiLa2O3\La2O3-Lithiation\wz-SEND-convex"
 
 
 def li_folder_sort_key(path: Path) -> tuple[int, str]:

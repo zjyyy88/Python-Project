@@ -1,6 +1,2 @@
 ﻿input_file,status,li_count,li_fraction,spacegroup_symbol,spacegroup_number,crystal_system,hall_symbol,ia3_targeted,ia3_applied,used_symprec,cif_output,note,error
-E:\固态组\LiLa2O3\LixMgxLa32-xO48\掺杂base结构\Li0.000La2.000O3.000_001_CONTCAR.vasp,ok,0,0.000000,Ia-3,206,cubic,-I 2b 2c 3,no,no,0.01,symmetry_cif_outputs\Li0.000La2.000O3.000_001_CONTCAR_SG206_Ia-3.cif,,
-E:\固态组\LiLa2O3\LixMgxLa32-xO48\掺杂base结构\Li0.062La2.000O3.000_001_CONTCAR.vasp,ok,1,0.012346,R3,146,trigonal,R 3,no,no,0.01,symmetry_cif_outputs\Li0.062La2.000O3.000_001_CONTCAR_SG146_R3.cif,,
-E:\固态组\LiLa2O3\LixMgxLa32-xO48\掺杂base结构\Li0.125La2.000O3.000_002_CONTCAR.vasp,ok,2,0.024390,P2_1,4,monoclinic,P 2yb,yes,no,0.01,symmetry_cif_outputs\Li0.125La2.000O3.000_002_CONTCAR_Ia3Fallback_SG4_P2_1.cif,Targeted Ia-3 but not matched; fallback to default symprec.,
-E:\固态组\LiLa2O3\LixMgxLa32-xO48\掺杂base结构\Li0.188La2.000O3.000_001_CONTCAR.vasp,ok,3,0.036145,R3,146,trigonal,R 3,yes,no,0.01,symmetry_cif_outputs\Li0.188La2.000O3.000_001_CONTCAR_Ia3Fallback_SG146_R3.cif,Targeted Ia-3 but not matched; fallback to default symprec.,
-E:\固态组\LiLa2O3\LixMgxLa32-xO48\掺杂base结构\LiLa2O3-zwbSEND.vasp,ok,16,0.166667,Ia-3,206,cubic,-I 2b 2c 3,no,no,0.01,symmetry_cif_outputs\LiLa2O3-zwbSEND_SG206_Ia-3.cif,,
+E:\固态组\LiLa2O3\La2O3-Lithiation\LiLa2O3-wzSEND.vasp,ok,24,0.230769,Ia-3,206,cubic,-I 2b 2c 3,no,no,0.01,symmetry_cif_outputs\LiLa2O3-wzSEND_SG206_Ia-3.cif,,

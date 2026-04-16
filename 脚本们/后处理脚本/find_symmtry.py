@@ -27,7 +27,7 @@ from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.cif import CifWriter
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
-DEFAULT_PATTERN = r"E:\固态组\LiLa2O3\LixMgxLa32-xO48\掺杂base结构\*.vasp"
+DEFAULT_PATTERN = r"E:固态组\LiLa2O3\La2O3-Lithiation\LiLa2O3-wzSEND.vasp"
 IA3_SYMBOL = "Ia-3"
 IA3_NUMBER = 206
 DEFAULT_IA3_SCAN = "0.01,0.02,0.03,0.05,0.08,0.1,0.15,0.2,0.3,0.5"
