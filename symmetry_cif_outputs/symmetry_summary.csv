@@ -1,2 +1,2 @@
-﻿input_file,status,li_count,li_fraction,spacegroup_symbol,spacegroup_number,crystal_system,hall_symbol,ia3_targeted,ia3_applied,used_symprec,cif_output,note,error
-E:\固态组\LiLa2O3\La2O3-Lithiation\LiLa2O3-wzSEND.vasp,ok,24,0.230769,Ia-3,206,cubic,-I 2b 2c 3,no,no,0.01,symmetry_cif_outputs\LiLa2O3-wzSEND_SG206_Ia-3.cif,,
+﻿input_file,status,spacegroup_symbol,spacegroup_number,crystal_system,hall_symbol,cif_output,error
+D:\aaazjy\zjyyyyy\halide water adsorption\zjy-calc\Bi-dopingLYC\Asano_relax\supercell_il011_w12.vasp,ok,P1,1,triclinic,P 1,symmetry_cif_outputs\supercell_il011_w12_SG1_P1.cif,

@@ -26,9 +26,8 @@ from ase.io import read as ase_read
 from pymatgen.io.ase import AseAtomsAdaptor
 from pymatgen.io.cif import CifWriter
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-
-DEFAULT_PATTERN = r"E:\固态组\LiLa2O3\LixMgxLa32-xO48\掺杂base结构\*.vasp"
-
+#DEFAULT_PATTERN = r"E:\固态组\LiLa2O3\LixMgxLa32-xO48\掺杂base结构\*.vasp"
+DEFAULT_PATTERN = r"D:\aaazjy\zjyyyyy\halide water adsorption\zjy-calc\Bi-dopingLYC\Asano_relax\supercell_il011_w12.vasp"
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
