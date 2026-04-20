@@ -1,0 +1,22 @@
+RDF coordination-number check (rough estimate from XDATCAR frame 0)
+xdatcar: C:\Users\ZHANGJY02\Desktop\XDATCAR-LML-400K
+rdf_csv: rdf_LML-400K_Li_Li.csv
+pair: Li-Li
+
+frame0_n_atoms = 127
+frame0_volume_A3 = 2631.216647
+n_ref = 124
+n_target = 124
+effective_n_target_for_density = 123
+rho_B_A^-3 = 0.04674644
+same_species = True
+
+first_peak_r_A = 2.9750
+auto_first_min_r_A = 4.0750
+used_rcut_A = 4.0750
+CN_integrated_at_rcut = 13.285603
+CN_random_at_rcut = 13.250124
+CN_ratio_to_random = 1.002678
+
+g_tail_mean(last_32_pts) = 0.773922
+g_tail_std(last_32_pts) = 0.273801

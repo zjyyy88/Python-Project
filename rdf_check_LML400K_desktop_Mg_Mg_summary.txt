@@ -1,0 +1,25 @@
+RDF coordination-number check (rough estimate from XDATCAR frame 0)
+xdatcar: C:\Users\ZHANGJY02\Desktop\XDATCAR-LML-400K
+rdf_csv: rdf_LML-400K_Mg_Mg.csv
+pair: Mg-Mg
+
+frame0_n_atoms = 127
+frame0_volume_A3 = 2631.216647
+n_ref = 2
+n_target = 2
+effective_n_target_for_density = 1
+rho_B_A^-3 = 0.00038005
+same_species = True
+
+first_peak_r_A = 3.2250
+auto_first_min_r_A = 3.2750
+used_rcut_A = 3.2750
+CN_integrated_at_rcut = 0.354793
+CN_random_at_rcut = 0.055920
+CN_ratio_to_random = 6.344664
+
+g_tail_mean(last_32_pts) = 0.000000
+g_tail_std(last_32_pts) = 0.000000
+
+flags:
+- Tail mean of g(r) is far from 1.0; check equilibration/rcut/normalization.
