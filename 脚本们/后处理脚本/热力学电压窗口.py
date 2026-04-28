@@ -21,7 +21,7 @@ with MPRester("HiDNgsh0Zz5RnMjLIjH3HxfFjTwnRIgb") as mpr:
     #print(f"已下载 {len(entries)} 个条目")
 
     # 定义锂金属参考能量（手动设定值，也可从 entries 自动获取）
-    Li_potential = -1.9089  
+    Li_potential = -1.92  
 
     # 4. 构建相图对象
     PD = PhaseDiagram(entries=entries)

@@ -15,19 +15,19 @@ def parse_args():
     )
     parser.add_argument(
         "--input",
-        default=r"C:\Users\ZHANGJY02\Desktop\energy_per_formula_gcd.csv",
+        default=r"E:\固态组\LiLa2O3\La2O3-Lithiation\wz-SEND-convex\energy_per_formula_gcd(1).xlsx",
         help="输入数据文件（CSV 或 Excel）。默认读取桌面 energy_per_formula_gcd.excel",
     )
     parser.add_argument(
         "--e-x0",
         type=float,
-        default=-671.0190748,
+        default=-1536.803308,
         help="x=0 的参考总能 E(x=0)；默认 -671.0190748",
     )
     parser.add_argument(
         "--e-x1",
         type=float,
-        default=None,
+        default=-1566.481201,
         help="x=1 的参考总能 E(x=1)；若不提供则自动从输入数据中读取",
     )
     parser.add_argument(

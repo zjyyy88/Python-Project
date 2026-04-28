@@ -6,7 +6,7 @@ import pandas as pd  # 导入 pandas 库，用于数据处理
 
 # 读取指定路径的 vasprun1.xml 文件，实例化 Vasprun 对象
 # 注意：这里读取的是 vasprun1.xml，请确保文件存在
-v = Vasprun(r'C:\Users\ZHANGJY02\PycharmProjects\PythonProject\vasprun1.xml')
+v = Vasprun(r'D:\aaazjy\2025.4.1\InCl3·3H2O\case\reaction\newVCl2OH-27712-USPEX-InCl2OH\vasprun.xml')
 
 tdos = v.tdos  # 从 Vasprun 对象中获取总态密度 (Total DOS) 数据
 plottertdos = DosPlotter()  # 创建一个 DosPlotter 绘图对象
@@ -37,7 +37,7 @@ print(bandgap)  # 打印带隙信息 DataFrame
 
 cdos = v.complete_dos  # 从 Vasprun 对象中获取完整的态密度数据 (Complete DOS)
 element_dos = cdos.get_element_dos()  # 获取元素投影的态密度 (Element-resolved DOS)
-plotterelement = DosPlotter(sigma=0.01)   # 创建 DosPlotter 对象，sigma 参数用于控制展宽 (smearing)
+plotterelement = DosPlotter(sigma=0.2)   # 创建 DosPlotter 对象，sigma 参数用于控制展宽 (smearing)
 plotterelement.add_dos_dict(element_dos)  # 将元素态密度数据添加到绘图对象中
 
 

@@ -36,7 +36,7 @@ except ImportError as e:
 class AIMDAnalyzer:
     """AIMD结果分析器"""
     
-    def __init__(self, data_dir=None, temperature=700.0):
+    def __init__(self, data_dir=None, temperature=1600.0):
         """
         初始化分析器
         
@@ -49,7 +49,7 @@ class AIMDAnalyzer:
         """
         if data_dir is None:
             # 默认桌面路径
-            desktop = Path.home() / "Desktop"
+            desktop = Path.home() / "E:\固态组\LiLa2O3\La2O3-Lithiation\wz-SEND-convex\Li1\AIMD-pbe"
             self.data_dir = desktop
         else:
             self.data_dir = Path(data_dir)
@@ -57,11 +57,11 @@ class AIMDAnalyzer:
         self.temperature = temperature
         self.xdatcar_path = None
         self.outcar_path = None
-        self.xdatcar = None
+        self.xdatcar =  None
         self.outcar = None
         self.trajectory = None
         self.structures = []
-        self.timesteps = []
+        self.timesteps = [2]
         self.total_time = 0.0
         self.time_step = 0.0
         self.nsteps = 0

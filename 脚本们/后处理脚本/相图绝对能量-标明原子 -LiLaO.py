@@ -6,19 +6,36 @@ import matplotlib.pyplot as plt
 
 # 2. 构建体系所有相的 PDEntry（成分 + 每个化学式对应的总能量，单位 eV）
 entries = [
-    PDEntry(Composition("La2O3"), -41.944826),
-    PDEntry(Composition("La"), -4.895479),
-    PDEntry(Composition("Li2O"), -14.314615),
-    PDEntry(Composition("La32Li1O48"), -670.83992),
-    PDEntry(Composition("La32Li2O48"), -672.69114124),
-    PDEntry(Composition("La32Li3O48"), -674.42556927),
-    PDEntry(Composition("La32Li6O48"), -678.53968474),
-    PDEntry(Composition("La32Li12O48"), -684.4147654),
+    PDEntry(Composition("La2O3"), -96.05805),
+    PDEntry(Composition("La"),-29.741277),
+    PDEntry(Composition("Li2O"), -16.836728),
+    PDEntry(Composition("La32O48"), -1536.803308),
+    PDEntry(Composition("Li1La32O48"), -1538.3256),
+    PDEntry(Composition("Li2La32O48"), -1540.2683),
+    PDEntry(Composition("Li3La32O48"), -1542.1830),
+    PDEntry(Composition("Li4La32O48"), -1543.4968),
+    PDEntry(Composition("Li5La32O48"), -1545.0632),
+    PDEntry(Composition("Li6La32O48"), -1547.1499),
+    PDEntry(Composition("Li7La32O48"), -1548.5724),
+    PDEntry(Composition("Li8La32O48"), -1549.7982),
+    PDEntry(Composition("Li9La32O48"), -1551.4277),
+    PDEntry(Composition("Li10La32O48"), -1553.927),
+    PDEntry(Composition("Li11La32O48"), -1555.302),
+    PDEntry(Composition("Li12La32O48"), -1557.243),
+    PDEntry(Composition("Li13La32O48"), -1559.079),
+    PDEntry(Composition("Li14La32O48"), -1561.557),
+    PDEntry(Composition("Li15La32O48"), -1563.067),
+    PDEntry(Composition("Li16La32O48"), -1564.558),
+    PDEntry(Composition("Li17La32O48"), -1566.943),
+    PDEntry(Composition("Li18La32O48"), -1569.225),
+    PDEntry(Composition("Li19La32O48"), -1571.329),
+    PDEntry(Composition("Li20La32O48"), -1573.296),
+    PDEntry(Composition("Li21La32O48"), -1574.671),
+    PDEntry(Composition("Li22La32O48"), -1576.969),
+    PDEntry(Composition("Li24La32O48"), -1566.481),
+
     
     # ② 化合物相（VASP 计算得到的晶胞总能，单位 eV）
-    PDEntry(Composition("La32Li14O48"), -685.68270599),
-    PDEntry(Composition("La32Li15O48"), -683.1274741),
-    PDEntry(Composition("La32Li16O48"), -661.95986939),
 ]
 
 # 3. 构建相图对象（以 Li2O-La2O3-La 为端点）
@@ -36,15 +53,30 @@ for entry in stable_entries:
     print(f"成分：{entry.original_entry.composition}，单原子能量：{entry.energy_per_atom:.4f} eV/atom")
 
 # ✅ 批量输出指定化学式的凸包能（eV/atom）
-target_formulas = [
-    "La32Li1O48",
-    "La32Li2O48",
-    "La32Li3O48",
-    "La32Li6O48",
-    "La32Li12O48",
-    "La32Li14O48",
-    "La32Li15O48",
-    "La32Li16O48",
+target_formulas = [   
+"Li1La32O48",
+"Li2La32O48",
+"Li3La32O48",
+"Li4La32O48",
+"Li5La32O48",
+"Li6La32O48",
+"Li7La32O48",
+"Li8La32O48",
+"Li9La32O48",
+"Li10La32O48",
+"Li11La32O48",
+"Li12La32O48",
+"Li13La32O48",
+"Li14La32O48",
+"Li15La32O48",
+"Li16La32O48",
+"Li17La32O48",
+"Li18La32O48",
+"Li19La32O48",
+"Li20La32O48",
+"Li21La32O48",
+"Li22La32O48",
+"Li24La32O48"
 ]
 
 print("=" * 60)

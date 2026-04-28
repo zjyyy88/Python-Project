@@ -1,2 +1,2 @@
-﻿input_file,status,spacegroup_symbol,spacegroup_number,crystal_system,hall_symbol,cif_output,error
-D:\aaazjy\zjyyyyy\halide water adsorption\zjy-calc\Bi-dopingLYC\Asano_relax\supercell_il011_w12.vasp,ok,P1,1,triclinic,P 1,symmetry_cif_outputs\supercell_il011_w12_SG1_P1.cif,
+﻿input_file,status,li_count,li_fraction,spacegroup_symbol,spacegroup_number,crystal_system,hall_symbol,ia3_targeted,ia3_applied,used_symprec,cif_output,note,error
+D:\aaazjy\zjyyyyy\halide water adsorption\zjy-calc\bulk\LiYCl\content\CONTCAR.vasp,ok,27,0.300000,C2,5,monoclinic,C 2y,no,no,0.01,symmetry_cif_outputs\CONTCAR_SG5_C2.cif,,
