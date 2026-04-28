@@ -4,7 +4,7 @@ from bvlain import Lain  # 从bvlain库导入Lain类
 
 
 
-file = r'C:\Users\ZHANGJY02\PycharmProjects\PythonProject\supercell.cif'  # 正确的结构文件路径
+file = r'D:\tbb-LPSCI\Li6PS5Cl.cif'  # 正确的结构文件路径
 calc = Lain(verbose = True)        # 定义计算器对象，并设置为详细模式
 calc.read_file(file) # 读取结构文件
 

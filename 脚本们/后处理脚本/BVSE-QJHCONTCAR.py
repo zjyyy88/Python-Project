@@ -9,7 +9,7 @@ def parse_args():
 	parser = argparse.ArgumentParser(description="Li-La-O 结构的 BVSE 计算脚本（含自动判价兜底）")
 	parser.add_argument(
 		"--input",
-		default=r"E:\固态组\LiLa2O3\La2O3-Lithiation\wz.cif",
+		default=r"D:\tbb-LPSCI\Li6PS5Cl.cif",
 		help="输入结构文件（cif/vasp 等）",
 	)
 	parser.add_argument("--mobile-ion", default="Li1+", help="迁移离子，默认 Li1+")

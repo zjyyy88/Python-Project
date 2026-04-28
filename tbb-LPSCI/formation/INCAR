@@ -1,0 +1,24 @@
+SYSTEM = Li6PS5Cl 
+ISTART = 0
+ICHARG = 2
+LWAVE  = .FALSE.
+LCHARG = .TRUE.
+NCORE = 8
+ENCUT  = 520
+GGA=PS
+PREC   = Normal
+EDIFF  = 1E-5
+EDIFFG = -0.02
+NELM = 60
+IBRION = 2         
+NSW    = 300     
+POTIM  = 0.5
+ISIF = 3
+ISPIN = 2          
+ISMEAR = 0
+SIGMA  = 0.05
+IVDW=11
+
+
+
+
