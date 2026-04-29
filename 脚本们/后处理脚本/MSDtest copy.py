@@ -49,7 +49,7 @@ class AIMDAnalyzer:
         """
         if data_dir is None:
             # 默认桌面路径
-            desktop = Path.home() / "E:\固态组\LiLa2O3\La2O3-Lithiation\wz-SEND-convex\Li1\AIMD-pbe"
+            desktop = Path.home() / "E:\固态组\LiLa2O3\La2O3-Lithiation\wz-SEND-convex\relax_stct\Li3\supercell_il0048_w24-lowest\1600K"
             self.data_dir = desktop
         else:
             self.data_dir = Path(data_dir)
