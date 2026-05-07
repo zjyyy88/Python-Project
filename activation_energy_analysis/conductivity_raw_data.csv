@@ -1,0 +1,9 @@
+temperature,conductivity,directory,file
+400.0,346.63,D:\tbb-LPSCI\AIMD\base\400K,D:\tbb-LPSCI\AIMD\base\400K\result.dat
+500.0,323.6,D:\tbb-LPSCI\AIMD\base\500K,D:\tbb-LPSCI\AIMD\base\500K\result.dat
+600.0,337.69,D:\tbb-LPSCI\AIMD\base\600K,D:\tbb-LPSCI\AIMD\base\600K\result.dat
+700.0,357.5,D:\tbb-LPSCI\AIMD\base\700K,D:\tbb-LPSCI\AIMD\base\700K\result.dat
+800.0,267.86,D:\tbb-LPSCI\AIMD\base\800K,D:\tbb-LPSCI\AIMD\base\800K\result.dat
+900.0,367.61,D:\tbb-LPSCI\AIMD\base\900K,D:\tbb-LPSCI\AIMD\base\900K\result.dat
+1000.0,690.24,D:\tbb-LPSCI\AIMD\base\1000K,D:\tbb-LPSCI\AIMD\base\1000K\result.dat
+1100.0,1832.36,D:\tbb-LPSCI\AIMD\base\1100K,D:\tbb-LPSCI\AIMD\base\1100K\result.dat

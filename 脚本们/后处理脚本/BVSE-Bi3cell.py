@@ -2,7 +2,7 @@ import os
 from bvlain import Lain  # 从bvlain库导入Lain类
 from pathlib import Path
 
-file = r'D:\tbb-LPSCI\base\1.cif'  # 正确的结构文件路径
+file = r'D:\tbb-LPSCI\Idoping\2.cif'  # 正确的结构文件路径
 print(f"[DEBUG] 输入文件路径: {file}")
 print(f"[DEBUG] 文件是否存在: {Path(file).exists()}")
 

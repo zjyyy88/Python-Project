@@ -17,7 +17,7 @@ warnings.filterwarnings('ignore')
 class MDPostProcessor:
     """分子动力学后处理器"""
     
-    def __init__(self, trajectory_file="XDATCAR", temperature=1200.0):
+    def __init__(self, trajectory_file="XDATCAR", temperature=400.0):
         self.trajectory_file = trajectory_file
         self.temperature = temperature
         self.trajectory = None
@@ -61,7 +61,7 @@ class MDPostProcessor:
         msd_values = []
         times = []
         
-        for dt in range(1, min(100, n_frames)):  # 分析前100个时间间隔
+        for dt in range(1, min(25000, n_frames)):  # 分析前100个时间间隔
             msd_sum = 0.0
             count = 0
             

@@ -6,10 +6,10 @@ import pandas as pd
 import numpy as np
 
 # -------------------------- 1. 参数配置 --------------------------
-OUTCAR_PATH = r"E:\固态组\LiLa2O3\La2O3-Lithiation\wz-SEND-convex\relax_stct\Li3\supercell_il0048_w24-lowest\1600K\vasprun.xml"
+OUTCAR_PATH = r"E:\固态组\LiLa2O3\La2O3-Lithiation\wz-SEND-convex\relax_stct\Li6\supercell_il002410_w48-lowest\AIMD\vasprun.xml"
 TARGET_ION = "Li"
-T = 1600  # K
-FIT_RANGE = (1000, 5000)  # 拟合区间
+T = 1700  # K
+FIT_RANGE = (1, 20)  # 拟合区间
 
 # -------------------------- 2. 轨迹读取与分析 --------------------------
 vasprun = Vasprun(OUTCAR_PATH, parse_dos=False, parse_eigen=False)
