@@ -15,11 +15,11 @@ import matplotlib.pyplot as plt
 # ---------------------
 # 参数设置区
 # ---------------------
-XDATCAR_PATH = 'D:/tbb-LPSCI/AIMD/base/400K/XDATCAR'  # 修改这里为你需要读取的文件路径，可以是绝对路径，例如 r"D:\...\XDATCAR"
-TEMPERATURE = 400
+XDATCAR_PATH = 'E:/固态组/LiLa2O3/LixLayOz-势函数/LiLaO2/pbe/AIMD/XDATCAR-1600K'  # 修改这里为你需要读取的文件路径，可以是绝对路径，例如 r"D:\...\XDATCAR"
+TEMPERATURE = 1600
 SPECIES = 'Li'
 POTIM = 2
-NBLOCK = 10
+NBLOCK = 1
 PDA_INTERVAL = 0.5
 
 # 这一步是读取 XDATCAR，得到一系列结构信息

@@ -1,4 +1,3 @@
-import argparse
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -10,24 +9,43 @@ from MDAnalysis.coordinates.memory import MemoryReader
 from pymatgen.io.vasp import Xdatcar
 
 """
-脚本计算逻辑（RDF）：
-1. 用 pymatgen 读取 XDATCAR，按 start/stop/stride 选择轨迹帧。
-2. 将每帧的笛卡尔坐标和晶胞参数 [a,b,c,alpha,beta,gamma] 送入 MDAnalysis Universe。
-3. 按元素名选择参考原子组 A（ref）和目标原子组 B（target）。
-4. 调用 InterRDF 统计 A-B 距离分布并归一化为 g(r)。
-5. 若 A 和 B 是同元素，排除自配对 i-i，避免 r≈0 的假峰。
-6. 导出 r 与 g(r) 到 CSV，并输出 RDF 曲线图。
+脚本计算逻辑（交互输入版 RDF）：
+1. 运行脚本后，按提示在脚本内部输入 XDATCAR 路径和 RDF 参数。
+2. 用 pymatgen 读取 XDATCAR，按 start/stop/stride 选择轨迹帧。
+3. 将每帧的笛卡尔坐标和晶胞参数送入 MDAnalysis Universe。
+4. 按元素名选择参考原子组 A（ref）和目标原子组 B（target）。
+5. 调用 InterRDF 统计 A-B 距离分布并归一化为 g(r)。
+6. 若 A 和 B 是同元素，排除自配对 i-i，避免 r≈0 的假峰。
+7. 导出 r 与 g(r) 到 CSV，并输出 RDF 曲线图。
 """
-#--xdatcar "D:\aaazjy\zjyyyyy\halide water adsorption\zjy-calc\Bi-dopingLYC\QJHCONTCAR-Bi0.33\MSD\XDATCAR-1000K" --ref Li --target Cl --rmin 0 --rmax 8 --bins 160 --stride 1 --out rdf_1000K
-"""
-先按 start/stop/stride 选出一组帧。
-InterRDF.run() 会遍历这些帧累计统计并归一化。
-最终输出的 g(r) 相当于所有选定帧的平均 RDF，适合后续积分配位数或峰位分析。
 
-默认参数下（start=0, stop=None, stride=1）就是全轨迹平均。
-如果你只想看单帧，把参数设成例如 start=200, stop=201（只取第 200 帧）。
-目前脚本输出的是一条平均曲线，不是逐帧时间分辨的 RDF。
-"""
+
+def _prompt(text: str, default: str | None = None) -> str:
+    if default is None:
+        value = input(f"{text}: ").strip()
+    else:
+        value = input(f"{text} [默认 {default}]: ").strip()
+        if value == "":
+            value = default
+    return value
+
+
+def _prompt_int(text: str, default: int) -> int:
+    value = _prompt(text, str(default))
+    return int(value)
+
+
+def _prompt_float(text: str, default: float) -> float:
+    value = _prompt(text, str(default))
+    return float(value)
+
+
+def _prompt_optional_int(text: str) -> int | None:
+    value = input(f"{text} [留空表示到最后一帧]: ").strip()
+    if value == "":
+        return None
+    return int(value)
+
 
 def load_universe_from_xdatcar(xdatcar_path: Path, start: int, stop: int | None, stride: int):
     # 第一步：读取 XDATCAR 并按用户给定的帧区间抽样。
@@ -89,42 +107,44 @@ def compute_rdf(u, ref_elem: str, target_elem: str, r_min: float, r_max: float, 
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Compute RDF from VASP XDATCAR using MDAnalysis.")
-    parser.add_argument("--xdatcar", required=True, help="Path to XDATCAR file")
-    parser.add_argument("--ref", default="Li", help="Reference element (default: Li)")
-    parser.add_argument("--target", default="Cl", help="Target element (default: Cl)")
-    parser.add_argument("--rmin", type=float, default=0.0, help="RDF range minimum in Angstrom")
-    parser.add_argument("--rmax", type=float, default=8.0, help="RDF range maximum in Angstrom")
-    parser.add_argument("--bins", type=int, default=160, help="Number of RDF bins")
-    parser.add_argument("--start", type=int, default=0, help="Start frame index")
-    parser.add_argument("--stop", type=int, default=None, help="Stop frame index (exclusive)")
-    parser.add_argument("--stride", type=int, default=1, help="Frame stride")
-    parser.add_argument("--out", default="rdf", help="Output prefix")
-    args = parser.parse_args()
+    print("=" * 60)
+    print("   RDF 计算工具（交互输入版）")
+    print("=" * 60)
 
-    xdatcar_path = Path(args.xdatcar)
+    xdatcar_input = _prompt("请输入 XDATCAR 文件路径")
+    xdatcar_path = Path(xdatcar_input)
     if not xdatcar_path.exists():
         raise FileNotFoundError(f"XDATCAR file not found: {xdatcar_path}")
+
+    ref_elem = _prompt("请输入参考元素 ref", "Li")
+    target_elem = _prompt("请输入目标元素 target", "Cl")
+    r_min = _prompt_float("请输入 RDF 统计起始距离 rmin (Å)", 0.0)
+    r_max = _prompt_float("请输入 RDF 统计最大距离 rmax (Å)", 8.0)
+    n_bins = _prompt_int("请输入 RDF 分箱数 bins", 160)
+    start = _prompt_int("请输入起始帧 start", 0)
+    stop = _prompt_optional_int("请输入终止帧 stop")
+    stride = _prompt_int("请输入抽帧步长 stride", 1)
+    out_prefix = _prompt("请输入输出前缀 out", "rdf")
 
     # 主流程：读取轨迹 -> 计算 RDF -> 导出结果。
     u, available_elements = load_universe_from_xdatcar(
         xdatcar_path=xdatcar_path,
-        start=args.start,
-        stop=args.stop,
-        stride=args.stride,
+        start=start,
+        stop=stop,
+        stride=stride,
     )
 
     bins, rdf_vals, n_ref, n_target, same_species = compute_rdf(
         u,
-        ref_elem=args.ref,
-        target_elem=args.target,
-        r_min=args.rmin,
-        r_max=args.rmax,
-        n_bins=args.bins,
+        ref_elem=ref_elem,
+        target_elem=target_elem,
+        r_min=r_min,
+        r_max=r_max,
+        n_bins=n_bins,
     )
 
-    out_csv = Path(f"{args.out}_{args.ref}_{args.target}.csv")
-    out_png = Path(f"{args.out}_{args.ref}_{args.target}.png")
+    out_csv = Path(f"{out_prefix}_{ref_elem}_{target_elem}.csv")
+    out_png = Path(f"{out_prefix}_{ref_elem}_{target_elem}.png")
 
     # 第六步：输出数值表和图像，便于后续积分配位数或峰位分析。
     df = pd.DataFrame({"r_A": bins, "g_r": rdf_vals})
@@ -134,15 +154,15 @@ def main():
     plt.plot(bins, rdf_vals, lw=2)
     plt.xlabel("r (A)")
     plt.ylabel("g(r)")
-    plt.title(f"RDF: {args.ref}-{args.target}")
-    plt.xlim(args.rmin, args.rmax)
+    plt.title(f"RDF: {ref_elem}-{target_elem}")
+    plt.xlim(r_min, r_max)
     plt.tight_layout()
     plt.savefig(out_png, dpi=300)
 
     print("RDF finished.")
     print(f"Frames used: {len(u.trajectory)}")
     print(f"Available elements: {available_elements}")
-    print(f"Selection: {args.ref} ({n_ref}) -> {args.target} ({n_target})")
+    print(f"Selection: {ref_elem} ({n_ref}) -> {target_elem} ({n_target})")
     if same_species:
         print("Note: same-species RDF enabled, self-pairs (i-i) were excluded.")
     print(f"CSV: {out_csv.resolve()}")

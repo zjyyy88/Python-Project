@@ -11,15 +11,15 @@ PROJECT_ROOT = SCRIPT_DIR.parent.parent
 
 # Edit these defaults if you want one-click run without command-line arguments.
 DEFAULT_CONFIG = {
-    "structure": "D:/aaazjy/zjyyyyy/halide water adsorption/zjy-calc/Bi-dopingLYC/Li3BiCl6/QJH-CONTCAR",
-    "cations": "Li,Y,Bi",
-    "anions": "Cl",
+    "structure": "E:/固态组/LiLa2O3/La2O3-Lithiation/LiLa2O3-wzSEND_pbe_CONTCAR",
+    "cations": "Li,La,O",
+    "anions": "O",
     "cutoff": None,
     "cutoff_start": 2.0,
     "cutoff_end": 3.0,
     "cutoff_step": 0.1,
     #"out": str(PROJECT_ROOT / "output" / "bond_stats"),
-    "out":"D:/aaazjy/zjyyyyy/halide water adsorption/zjy-calc/Bi-dopingLYC/Li3BiCl6/",
+    "out":"E:/固态组/LiLa2O3/La2O3-Lithiation/",
 }
 
 BOND_COLUMNS = [
