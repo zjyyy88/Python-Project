@@ -5,6 +5,7 @@ import math
 import re
 import subprocess
 from pathlib import Path
+from typing import Dict, List, Optional
 
 FLOAT_RE = re.compile(r"[-+]?(?:\d+\.\d*|\.\d+|\d+)(?:[eE][-+]?\d+)?")
 
@@ -25,19 +26,19 @@ def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="ignore")
 
 
-def extract_temperature(name: str) -> int | None:
+def extract_temperature(name: str) -> Optional[int]:
     nums = re.findall(r"\d+", name)
     if not nums:
         return None
     return int(nums[-1])
 
 
-def parse_diffusivity(text: str) -> dict[int, float]:
+def parse_diffusivity(text: str) -> Dict[int, float]:
     pattern = re.compile(
         r"(?P<name>msd[^:]*):\s*Average\s+Diffusivity\s*[:=]\s*(?P<val>[-+\d\.eE]+)",
         re.IGNORECASE,
     )
-    data: dict[int, float] = {}
+    data: Dict[int, float] = {}
     for m in pattern.finditer(text):
         name = m.group("name")
         val = float(m.group("val"))
@@ -59,7 +60,7 @@ def parse_concentration(text: str) -> float:
     raise ValueError("Cannot find ion concentration in output. Use --n to set it manually.")
 
 
-def linear_fit(x: list[float], y: list[float]):
+def linear_fit(x: List[float], y: List[float]):
     n = len(x)
     x_mean = sum(x) / n
     y_mean = sum(y) / n
@@ -88,6 +89,7 @@ def main() -> None:
     parser.add_argument("--fit-min", type=float, help="Min temperature (K) for fit")
     parser.add_argument("--fit-max", type=float, help="Max temperature (K) for fit")
     parser.add_argument("--no-fit", action="store_true", help="Skip activation energy fit")
+    parser.add_argument("--t0", type=float, default=300.0, help="Reference temperature for sigma extrapolation (K)")
     parser.add_argument("--out", default="transport_results", help="Output prefix")
     args = parser.parse_args()
 
@@ -168,6 +170,8 @@ def main() -> None:
             slope, intercept, r2 = linear_fit(x, y)
             ea_eV = -slope * K_B_EV
             ea_kj_mol = -slope * K_B * N_A / 1000.0
+            ln_sigmaT_t0 = slope * (1.0 / args.t0) + intercept
+            sigma_t0 = math.exp(ln_sigmaT_t0) / args.t0
             fit_lines.extend(
                 [
                     "", "Arrhenius fit: ln(sigma*T) vs 1/T",
@@ -177,6 +181,8 @@ def main() -> None:
                     f"R2 = {r2:.6f}",
                     f"Ea_eV = {ea_eV:.6f}",
                     f"Ea_kJ_mol = {ea_kj_mol:.6f}",
+                    f"sigma_{args.t0:.0f}K_S_cm = {sigma_t0:.6e}",
+                    f"sigma_{args.t0:.0f}K_mS_cm = {sigma_t0 * 1e3:.6f}",
                 ]
             )
         else:
